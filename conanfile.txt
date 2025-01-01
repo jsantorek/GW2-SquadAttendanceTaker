@@ -1,0 +1,12 @@
+[requires]
+imgui/1.80
+nexus-core-api/v6.1
+nlohmann_json/3.11.3
+stduuid/1.2.3
+
+[generators]
+CMakeDeps
+CMakeToolchain
+
+[layout]
+cmake_layout
