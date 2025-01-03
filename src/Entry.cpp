@@ -50,7 +50,9 @@ extern "C" __declspec(dllexport) AddonDefinition* GetAddonDef()
 		.Description = "Get formatted list of squad members copied to clipboard on demand",
 		.Load = AddonLoad,
 		.Unload = AddonUnload,
-		.Flags = EAddonFlags_IsVolatile
+		.Flags = EAddonFlags_IsVolatile,
+		.Provider = EUpdateProvider_GitHub,
+		.UpdateLink = "https://github.com/jsantorek/GW2-SquadAttendanceTaker"
 	};
 	return &def;
 }
