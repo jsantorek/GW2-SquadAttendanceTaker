@@ -2,14 +2,16 @@ cmake_minimum_required(VERSION 3.5.0...3.31.2)
 find_package(Git)
 execute_process(
     COMMAND
-        ${GIT_EXECUTABLE} describe --tags --dirty=.1 --abbrev=0 --match "v*.*.*"
+        ${GIT_EXECUTABLE} describe --tags --dirty --abbrev=0 --match "v*.*.*"
     WORKING_DIRECTORY
         ${CMAKE_CURRENT_SOURCE_DIR}
     OUTPUT_VARIABLE GIT_DESCRIBE_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
     COMMAND_ERROR_IS_FATAL ANY
 )
+
 string(REGEX REPLACE "^v" "" PROJECT_VERSION ${GIT_DESCRIBE_VERSION})
+string(REGEX REPLACE ".0-dirty" ".1" PROJECT_VERSION ${PROJECT_VERSION})
 project(SquadAttendanceTaker VERSION ${PROJECT_VERSION} LANGUAGES C CXX)
 
 find_package(imgui)
