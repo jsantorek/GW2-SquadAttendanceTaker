@@ -1,3 +1,4 @@
 # GW2-SquadAttendanceTaker
 Public part of Guild Wars 2 addon: Squad Attendance Taker
-conan install . -pr:h mingw
+
+conan install . --build=missing --profile=mingw

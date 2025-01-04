@@ -4,10 +4,10 @@
 
 namespace SAT
 {
-    struct SquadMember
-    {
-        std::string AccountName;
-        std::string CharacterName;
-        using UUID = uuids::uuid;
-    };
-}
+struct SquadMember
+{
+    std::string AccountName;
+    std::string CharacterName;
+    using UUID = uuids::uuid;
+};
+} // namespace SAT

@@ -1,38 +1,41 @@
 #pragma once
-#include <unordered_map>
-#include <string>
+#include "SquadMember.hpp"
+#include <atomic>
 #include <condition_variable>
 #include <mutex>
+#include <string>
 #include <thread>
-#include <atomic>
-#include <chrono>
-#include "SquadMember.hpp"
+#include <unordered_map>
 
 namespace SAT
 {
-    class AttendanceWatcher
+class AttendanceWatcher
+{
+  public:
+    AttendanceWatcher();
+    ~AttendanceWatcher();
+    void Start();
+    void Stop();
+    void FlushToClipboard();
+    void UpdateSquadMembers()
     {
-    public:
-        AttendanceWatcher();
-        ~AttendanceWatcher();
-        void Start();
-        void Stop();
-        void FlushToClipboard();
-        void UpdateSquadMembers()
-        {
-            UpdateSquadMembersAttendance();
-            UpdateSquadMembersData();
-        }
-        void UpdateSquadMembersAttendance();
-        void UpdateSquadMembersData();
-        bool IsRecording() { return _isRecording; }
-    private:
-        std::unordered_map<SquadMember::UUID, SquadMember> members;
-        std::string SerializeObservedSquadMembers();
-        void RunAutomatedUpdates();
-        std::condition_variable _condvar;
-        std::mutex _mutex;
-        std::thread _worker;
-        std::atomic<bool> _isRecording;   
-    };
-}
+        UpdateSquadMembersAttendance();
+        UpdateSquadMembersData();
+    }
+    void UpdateSquadMembersAttendance();
+    void UpdateSquadMembersData();
+    bool IsRecording()
+    {
+        return _isRecording;
+    }
+
+  private:
+    std::unordered_map<SquadMember::UUID, SquadMember> members;
+    std::string SerializeObservedSquadMembers();
+    void RunAutomatedUpdates();
+    std::condition_variable _condvar;
+    std::mutex _mutex;
+    std::thread _worker;
+    std::atomic<bool> _isRecording;
+};
+} // namespace SAT
