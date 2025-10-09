@@ -11,7 +11,7 @@ execute_process(
 )
 
 string(REGEX REPLACE "^v" "" PROJECT_VERSION ${GIT_DESCRIBE_VERSION})
-string(REGEX REPLACE ".0-dirty" ".1" PROJECT_VERSION ${PROJECT_VERSION})
+string(REGEX REPLACE "-dirty" ".1" PROJECT_VERSION ${PROJECT_VERSION})
 project(SquadAttendanceTaker VERSION ${PROJECT_VERSION} LANGUAGES C CXX)
 
 find_package(imgui)

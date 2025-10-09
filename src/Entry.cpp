@@ -47,7 +47,7 @@ extern "C" __declspec(dllexport) AddonDefinition *GetAddonDef()
     return &def;
 }
 
-void InputBindInvocationHandler(const char *aIdentifier, bool aIsRelease)
+void InputBindInvocationHandler(const char *, bool aIsRelease)
 {
     if (aIsRelease)
         return;
