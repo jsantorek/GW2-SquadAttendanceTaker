@@ -4,6 +4,10 @@ rcgg-nexus-api/v6.1
 nlohmann_json/3.11.3
 stduuid/1.2.3
 
+[tool_requires]
+cmake/3.31.5
+make/4.4.1
+
 [generators]
 CMakeDeps
 CMakeToolchain
