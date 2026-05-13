@@ -35,7 +35,7 @@ jobs:
             conan install . --build missing --profile windows-dynamic &&
             cmake --preset conan-release &&
             cmake --build --preset conan-release &&
-            cmake --install build/Release --prefix /addon/install
+            cmake --install build/Release --prefix install
           "
 
     - name: Find DLL artifact
