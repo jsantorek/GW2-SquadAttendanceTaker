@@ -8,9 +8,10 @@ execute_process(
     OUTPUT_VARIABLE GIT_DESCRIBE_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-if(${GIT_DESCRIBE_VERSION})
+if(GIT_DESCRIBE_VERSION)
     string(REGEX REPLACE "^v" "" PROJECT_VERSION ${GIT_DESCRIBE_VERSION})
     string(REGEX REPLACE "-dirty" ".1" PROJECT_VERSION ${PROJECT_VERSION})
+    message("Git describe based versioning: ${PROJECT_VERSION}")
 else()
     string(TIMESTAMP TIMESTAMP_VERSION "%Y;%m;%d;%H%M" UTC)
     set(PROJECT_VERSION "")
@@ -23,18 +24,19 @@ else()
         endif()
     endforeach()
     string(REPLACE ";" "." PROJECT_VERSION "${PROJECT_VERSION}")
+    message("Timestamp based versioning: ${PROJECT_VERSION}")
 endif()
 
-project(SquadAttendanceTaker VERSION ${PROJECT_VERSION} LANGUAGES C CXX)
-message("${PROJECT_NAME} v${PROJECT_VERSION}")
+get_filename_component(PROJECT_NAME "${CMAKE_CURRENT_SOURCE_DIR}" NAME)
+string(REGEX REPLACE "^[^-]+-" "" PROJECT_NAME "${PROJECT_NAME}")
+project(${PROJECT_NAME} VERSION ${PROJECT_VERSION} LANGUAGES C CXX)
 
+find_package(rcgg-nexus-api)
 find_package(imgui)
 find_package(nlohmann_json)
-find_package(stduuid)
-find_package(rcgg-nexus-api)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/src-re/GW2RE.cmake)
-file(GLOB SRCs ${CMAKE_CURRENT_SOURCE_DIR}/src/*.[hc]pp)
+file(GLOB_RECURSE SRCs ${CMAKE_CURRENT_SOURCE_DIR}/src/*.[hc]pp)
 add_library(${PROJECT_NAME}
     SHARED
         ${SRCs}
@@ -42,27 +44,29 @@ add_library(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-    imgui::imgui
     rcgg-nexus-api::rcgg-nexus-api
+    imgui::imgui
     nlohmann_json::nlohmann_json
-    psapi
-    ntdll
-    stduuid::stduuid
+    ${RE_LIBs}
 )
+string(REGEX REPLACE "[^A-Z]" "" PROJECT_ACRONYM "${PROJECT_NAME}")
 target_compile_definitions(${PROJECT_NAME}
     PRIVATE
         ADDON_VERSION_MAJOR=${PROJECT_VERSION_MAJOR}
         ADDON_VERSION_MINOR=${PROJECT_VERSION_MINOR}
         ADDON_VERSION_PATCH=${PROJECT_VERSION_PATCH}
-        ADDON_VERSION_REVISION=${PROJECT_VERSION_TWEAK}
+        ADDON_VERSION_REVISION=$<IF:$<BOOL:${PROJECT_VERSION_TWEAK}>,${PROJECT_VERSION_TWEAK},0>
         ADDON_NAME="${PROJECT_NAME}"
+        ADDON_ACRONYM="${PROJECT_ACRONYM}"
 )
 target_include_directories(${PROJECT_NAME}
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${RE_INCLUDE_DIRS}
 )
-set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
+string(REGEX REPLACE "([a-z0-9])([A-Z])" "\\1_\\2" PROJECT_FILENAME "${PROJECT_NAME}")
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_FILENAME})
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION "."
 )
+message("${PROJECT_NAME} v${PROJECT_VERSION} ${PROJECT_FILENAME}.dll")

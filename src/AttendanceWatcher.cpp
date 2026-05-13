@@ -100,7 +100,7 @@ void SAT::AttendanceWatcher::UpdateSquadMembersData()
                 catch (const SAT::UserDataUnavailable &)
                 {
                     std::stringstream oss;
-                    oss << "Failed to GetDetailedInfo for user UUID " << uuid;
+                    oss << "Failed to GetDetailedInfo for user UUID " << uuid.ToString();
                     G::APIDefs->Log(ELogLevel_WARNING, ADDON_NAME, oss.str().c_str());
                 }
             }
@@ -158,7 +158,7 @@ std::string SAT::AttendanceWatcher::SerializeObservedSquadMembers()
     {
         if (G::Options.TabularizeAccountUUIDs)
         {
-            clipboardMsg << uuid << G::Options.ColumnSeparator;
+            clipboardMsg << uuid.ToString() << G::Options.ColumnSeparator;
         }
         if (G::Options.TabularizeAccountNames)
         {
