@@ -35,13 +35,13 @@ jobs:
             conan install . --build missing --profile windows-dynamic &&
             cmake --preset conan-release &&
             cmake --build --preset conan-release &&
-            cmake --install build/Release --prefix /install
+            cmake --install build/Release --prefix /addon/install
           "
 
     - name: Find DLL artifact
       id: find_dll
       run: |
-        DLL_PATH=$(find /install -type f -name '*.dll' | head -n 1)
+        DLL_PATH=$(find install -type f -name '*.dll' | head -n 1)
         if [ -z "$DLL_PATH" ]; then
           echo "No DLL found!" >&2
           exit 1
